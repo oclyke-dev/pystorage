@@ -1,12 +1,15 @@
-from storage import RootStorage, Storage
+from storage import RootStorage
+
+root_flag = None
+static_flag = None
+FAIL = Exception('test failed')
 
 class TestStorage(RootStorage):
   pass
 
-# some definitions and declarations
-FAIL = Exception('test failed')
-root_flag = None
-static_flag = None
+def test_assignment():
+  s = TestStorage()
+  s.field = '42'
 
 # ensure fields can be set
 def test_set():
