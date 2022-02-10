@@ -44,7 +44,7 @@ class Storage:
       try:
         self._storage[key]
         for k, v in value.items():
-          object.__setattr__(self._storage[key], k) 
+          object.__setattr__(self._storage[key], k, v) 
       except KeyError:
         self._storage[key] = Storage(self, key, value)
     else:
