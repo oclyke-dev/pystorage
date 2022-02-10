@@ -14,6 +14,7 @@ class Storage:
   def __init__(self, base, key, value):
     object.__setattr__(self, '_base', base)       # base storage object or None if root
     object.__setattr__(self, '_key', key)         # key of this storage within its base
+    object.__setattr__(self, '_root_responders', [])   # responders for changes to this storage at large
     object.__setattr__(self, '_responders', {})   # responders for keys within this storage
     object.__setattr__(self, '_storage', {})      # sub level storage objects
     object.__setattr__(self, '_cache', {})        # plain-data cache of this storage
@@ -68,29 +69,36 @@ class Storage:
         responder(value)
     except KeyError:
       pass
+    for responder in self._root_responders:
+      responder(value)
 
-  def _register(self, responder, path):
-    p = DotPath(path)
-    if p.is_final:
-      try:
-        self._responders[p.root].append(responder)
-      except KeyError:
-        self._responders[p.root] = [responder]
+  def _register(self, responder, path=None):
+    if path is not None:
+      p = DotPath(path)
+      if p.is_final:
+        try:
+          self._responders[p.root].append(responder)
+        except KeyError:
+          self._responders[p.root] = [responder]
+      else:
+        self._storage[p.root]._register(responder, p.branch)
     else:
-      self._storage[p.root]._register(responder, p.branch)
+      self._root_responders.append(responder)
       
-  def _deregister(self, responder, path):
-    p = DotPath(path)
-    if p.is_final:
-      try:
-        self._responders[p.root] = list(filter(lambda r: r is not responder, self._responders[p.root]))
-        if len(self._responders[p.root]) == 0:
-          del self._responders[p.root]
-      except KeyError:
-        pass
+  def _deregister(self, responder, path=None):
+    if path is not None:
+      p = DotPath(path)
+      if p.is_final:
+        try:
+          self._responders[p.root] = list(filter(lambda r: r is not responder, self._responders[p.root]))
+          if len(self._responders[p.root]) == 0:
+            del self._responders[p.root]
+        except KeyError:
+          pass
+      else:
+        self._storage[p.root]._deregister(responder, p.branch)
     else:
-      self._storage[p.root]._deregister(responder, p.branch)
-    pass
+      self._root_responders = list(filter(lambda r: r is not responder, self._root_responders))
 
 
 
