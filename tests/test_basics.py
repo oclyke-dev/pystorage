@@ -16,6 +16,11 @@ def test_set():
   s = TestStorage()
   s.field = 0
 
+# ensure fields can be set
+def test_item_assignment():
+  s = TestStorage()
+  s['field'] = 0
+
 # ensure dicts can be set
 def test_set_dict():
   s = TestStorage()

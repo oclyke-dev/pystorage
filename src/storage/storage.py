@@ -28,10 +28,16 @@ class Storage:
     # signal final form upon creation
     self._final(self._cache)
 
+  def __setitem__(self, key, value):
+    self.__setattr__(key, value)
+
   def __setattr__(self, key, value):
     self._cache[key] = value
     self._update_storage(key, value)
     self._bubble(key, value)
+
+  def __getitem__(self, key):
+    return self.__getattr__(key)
 
   def __getattr__(self, key):
     return self._storage[key] if key in self._storage else self._cache[key]
