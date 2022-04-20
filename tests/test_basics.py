@@ -69,6 +69,24 @@ def test_empty_dict_overwrite():
     raise FAIL
 
   s['field'] = 0
+      
+# ensure fields can be deleted
+def test_field_del():
+  s = TestStorage()
+  nested = {'deep': 42}
+  s.nested = nested
+
+  assert(s.nested['deep'] == nested['deep'])
+  del s.nested['deep']
+
+  passing = False
+  try:
+    s.nested.deep
+  except KeyError:
+    passing = True
+  
+  if not passing:
+    raise FAIL
 
 # test responders
 def test_responders():

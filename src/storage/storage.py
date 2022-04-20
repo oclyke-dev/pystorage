@@ -28,6 +28,11 @@ class Storage:
     # signal final form upon creation
     self._final(self._cache)
 
+  def __delitem__(self, key):
+    del self._cache[key]
+    if key in self._storage:
+      del self._storage[key]
+
   def __setitem__(self, key, value):
     self.__setattr__(key, value)
 
