@@ -48,7 +48,15 @@ class Storage:
     return self._storage[key] if key in self._storage else self._cache[key]
 
   def __repr__(self):
-    return str(self._cache)
+    def get_snapshot(storage):
+      snapshot = {}
+      for key in storage._cache: # cache tracks all keys
+        if key in storage._storage:
+          snapshot[key] = get_snapshot(storage._storage[key])
+        else:
+          snapshot[key] = storage._cache[key]
+      return snapshot
+    return str(get_snapshot(self))
 
   def _clear_cache(self):
     object.__setattr__(self, '_cache', {})
