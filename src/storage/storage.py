@@ -67,7 +67,7 @@ class Storage:
         self._storage[key] # test whether the storage object already exists
         self._storage[key]._clear_cache() # ensure cache is emptied
         for k, v in value.items():
-          object.__setattr__(self._storage[key], k, v) 
+          self._storage[key].__setattr__(k, v)
       except KeyError:
         self._storage[key] = Storage(self, key, value)
     else:

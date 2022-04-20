@@ -88,6 +88,18 @@ def test_field_del():
   if not passing:
     raise FAIL
 
+# ensure fields can be deleted
+def test_re_set_dict():
+  s = TestStorage()
+  nested = {'deep': 42}
+  second = {'key': 'value'}
+
+  s.nested = nested
+  assert(s.nested['deep'] == nested['deep'])
+
+  s.nested = second
+  assert(s.nested['key'] == second['key'])
+
 # test responders
 def test_responders():
   global root_flag
