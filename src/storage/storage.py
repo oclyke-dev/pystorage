@@ -45,10 +45,14 @@ class Storage:
   def __repr__(self):
     return str(self._cache)
 
+  def _clear_cache(self):
+    object.__setattr__(self, '_cache', {})
+
   def _update_storage(self, key, value):
     if(isinstance(value, dict)):
       try:
-        self._storage[key]
+        self._storage[key] # test whether the storage object already exists
+        self._storage[key]._clear_cache() # ensure cache is emptied
         for k, v in value.items():
           object.__setattr__(self._storage[key], k, v) 
       except KeyError:

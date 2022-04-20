@@ -48,6 +48,29 @@ def test_access():
   s.field = val
   assert(s.field == val)
 
+# ensure fields can be cleared
+def test_empty_dict_overwrite():
+  s = TestStorage()
+  nested = {'deep': 42}
+  s.nested = nested
+
+  assert(s.nested['deep'] == nested['deep'])
+
+  # try to set the nested value back to empty dict
+  s.nested = {}
+
+  passing = False
+  try:
+    holder = s.nested.deep
+    print(s.nested.deep)
+  except:
+    passing = True # expect the above operation to fail
+
+  if not passing:
+    raise FAIL
+
+  s['field'] = 0
+
 # test responders
 def test_responders():
   global root_flag
