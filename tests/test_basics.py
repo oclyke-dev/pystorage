@@ -61,9 +61,8 @@ def test_empty_dict_overwrite():
 
   passing = False
   try:
-    holder = s.nested.deep
-    print(s.nested.deep)
-  except:
+    s.nested.deep
+  except KeyError:
     passing = True # expect the above operation to fail
 
   if not passing:
